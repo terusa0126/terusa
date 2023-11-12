@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+
+  <title>より良い眠りを</title>
+  <link rel="stylesheet" href="style30.css">
+    <!-----------とっぷ枠----------------!>
+<div align="center">
+   <a href="index.html"><img src="image/taitoru.png"></a>
+<img src="image/moon.png">
+</div>
+<!--トップ画像表示終了--!>
+    <style>
+/*class名centerに指示を出す*/
+        .center {
+ /*画面内にある要素を一列に配列させる*/
+            display: flex;
+/*全体の中身の要素を縦並びにする*/
+            flex-direction: column;
+/*全体の中身の要素を中央ぞろえにする*/
+            align-items: center;
+        }
+
+/*class名raw-messagesに指示をだす*/
+        .raw-messages {
+/*class名raw-messagesの中に書かれた文章の改行はそのままHTML上でも反映させる*/
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- カードを引く前 (最初はこっちだけ見せる) -->
+    <div class="center" id="before-draw">
+        <!--男の子のイラスト表示-->
+        <img src="image/card1-1.png" />
+        <button onclick="onClickDrawCard()">私の今の気持ちを教えて</button>
+        <img src="image/kuma1.png" />
+    </div>
+
+    <!-- カードを引いた後 (一度引いたあとはずっとこっちだけ見せる) -->
+    <div class="center" id="after-draw">
+        <img id="card-image" src="" />
+        <button onclick="onClickDrawCard()">私の今の気持ちを教えて</button>
+        <p class="raw-messages" id="card-message"></p>
+        <p>そんなあなたにおススメのリフレッシュ方法はこちら</p>
+        <a href="https://www.youtube.com/channel/UCMhJrUVcsVk9Q7z8YD8u5hA"target="blank">マインドフルネス動画一覧へ</a>
+        <a href="kouzityu.htm" target="blank">ゆったりお喋りしたい人はこちらへ</a>
+        <img src="image/rasuto.png" />
+    </div>
+
+
+<!-- カードの情報を読み出す -->
+<script src="cards.js"></script>
+
+
+<!-- 引く処理本体ここから -->
+<script>
+
+// カードを引いた結果の画像とメッセージを画面に反映する
+function applyDrawResult(imageUrl, message) {
+    // 画像のURLを書き換える
+    const imageRef = document.getElementById('card-image');
+    imageRef.src = imageUrl;
+
+    // メッセージを書き換える
+    const messageRef = document.getElementById('card-message');
+    messageRef.textContent = message;
+
+    // #after-drawを見せる
+    const afterDrawRef = document.getElementById('after-draw');
+    afterDrawRef.style.display = 'flex';
+
+    // #before-drawを隠す
+    const beforeDrawRef = document.getElementById('before-draw');
+    beforeDrawRef.style.display = 'none';
+}
+
+// カードを引くボタンを押したときの処理
+function onClickDrawCard() {
+    // cardsの中からランダムに1枚選ぶ
+    //  Math.random()は0以上1未満の小数の乱数を生成する。
+    //  cards.lengthを掛けることで、0以上cards.length未満の小数の乱数を生成する。
+    //  それをMath.floor()で小数点以下を切り捨てることで、
+    //  0～cards.length-1の範囲の整数を生成している。
+    const cardIndex = Math.floor(Math.random() * cards.length);
+
+    // 選んだカードの画像URLを生成する
+    //  cardIndexという変数を埋め込んでいる。
+    //  例えばcardIndexが0なら、imageUrlはimage/tarot0.pngになる。
+    const imageUrl = `image/tarot${cardIndex}.png`;
+
+    // 選んだカードのメッセージを生成する
+    const message = `今のあなたの気持ちは${cards[cardIndex]}である可能性があります。`;
+
+    // 画像とメッセージを画面に反映する
+    applyDrawResult(imageUrl, message);
+}
+
+// ページが読み込まれたときの処理
+window.addEventListener('DOMContentLoaded', () => {
+    // #after-drawを隠す
+    const afterDrawRef = document.getElementById('after-draw');
+    afterDrawRef.style.display = 'none';
+});
+</script>
+<!-- 引く処理本体ここまで -->
+
+</body>
+</html>

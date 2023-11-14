@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .raw-messages {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <!-- カードを引く前 (最初はこっちだけ見せる) -->
+        <div v-if="!drawed" class="center">
+            <!--男の子のイラスト表示-->
+            <img src="image/card1-1.png" />
+            <button @click="onClickDrawCard">私の今の気持ちを教えて</button>
+            <img src="image/kuma1.png" />
+        </div>
+
+        <!-- カードを引いた後 (一度引いたあとはずっとこっちだけ見せる) -->
+        <div v-else class="center">
+            <img v-bind:src="imageUrl" />
+            <button @click="onClickDrawCard">私の今の気持ちを教えて</button>
+            <p class="raw-messages">{{ message }}</p>
+            <p>そんなあなたにおススメのリフレッシュ方法はこちら</p>
+            <a href="index.html">マインドフルネス動画へ</a>
+            <a href="index.html">ゆったりお喋りしたい人はこちらへ</a>
+            <img src="image/rasuto.png" />
+        </div>
+    </div>
+
+    <!-- カードの情報を読み出す -->
+    <script src="cards.js"></script>
+
+    <!-- Vue.jsを読み込む -->
+    <script src="https://unpkg.com/vue@3.3.7/dist/vue.global.js"></script>
+
+    <!-- 引く処理本体ここから -->
+    <script>
+        const app = Vue.createApp({
+            data() {
+                return {
+                    drawed: false, // カードを引いたかどうか
+                    imageUrl: '', // カードの画像URL
+                    message: '', // カードのメッセージ
+                };
+            },
+            methods: {
+                onClickDrawCard() {
+                    // cardsの中からランダムに1枚選ぶ
+                    //  Math.random()は0以上1未満の小数の乱数を生成する。
+                    //  cards.lengthを掛けることで、0以上cards.length未満の小数の乱数を生成する。
+                    //  それをMath.floor()で小数点以下を切り捨てることで、
+                    //  0～cards.length-1の範囲の整数を生成している。
+                    const cardIndex = Math.floor(Math.random() * cards.length);
+
+                    // 選んだカードの画像URLを生成する
+                    //  cardIndexという変数を埋め込んでいる。
+                    //  例えばcardIndexが0なら、imageUrlはimage/tarot0.pngになる。
+                    this.imageUrl = `image/tarot${cardIndex}.png`;
+
+                    // 選んだカードのメッセージを生成する
+                    this.message = `今のあなたの気持ちは${cards[cardIndex]}である可能性があります。`;
+
+                    // カードを引いたことを記録する
+                    this.drawed = true;
+                },
+            }
+        });
+        app.mount('#app');
+    </script>
+    <!-- 引く処理本体ここまで -->
+
+</body>
+</html>
